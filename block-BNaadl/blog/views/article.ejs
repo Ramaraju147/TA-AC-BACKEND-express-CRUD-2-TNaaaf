@@ -17,5 +17,19 @@
         <button><a href="/articles/<%=article._id%>/edit">Edit</a></button>
         <button><a href="/articles/<%=article._id%>/delete">Delete</a></button>
     </div>
+    <form action="/articles/<%= article._id %>/comments" method="post">
+        <textarea name="content" id="comment" cols="30" rows="10"></textarea>
+        <label for="author">Author</label>
+        <input type="text" name="author" id="author">
+        <button>Add Comment</button>
+    </form>
+    <% article.comments.forEach((comment) => { %>
+        <h1><%= comment.content %></h1>
+        <h2><%= comment.author %></h2>
+        <h3><%= comment.likes %></h3>
+        <button><a href="/comments/<%=comment._id%>/like">Like</a></button>
+        <button><a href="/comments/<%=comment._id%>/edit">Edit</a></button>
+        <button><a href="/comments/<%=comment._id%>/delete">Delete</a></button>
+    <% }) %>
 </body>
 </html>
