@@ -6,7 +6,8 @@ const articleSchema = new Schema({
     description: String,
     tags: [String],
     author: String,
-    likes: Number
+    likes: Number,
+    comments: [{type: Schema.Types.ObjectId, ref: 'Comment'}]
 })
 
 module.exports = mongoose.model('Article',articleSchema);

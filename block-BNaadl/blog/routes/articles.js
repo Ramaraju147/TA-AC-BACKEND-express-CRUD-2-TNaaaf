@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const articleModel = require('../models/article')
+const commentsModel = require('../models/comment')
 
 router.get('/', function(req, res, next) {
   articleModel.find({}, (err,articles) => {
@@ -21,8 +22,9 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/:id', function(req, res, next) {
-  articleModel.findById(req.params.id, (err,article) => {
+  articleModel.findById(req.params.id).populate('comments').exec((err,article) => {
     if(err) next(err);
+    console.log(article);
     res.render('article',{article})
   })
 });
@@ -55,6 +57,16 @@ router.get('/:id/edit', function(req, res, next) {
   articleModel.findById(req.params.id, (err,article) => {
     if(err) next(err);
     res.render('editArticle',{article});
+  })
+});
+
+router.post('/:id/comments', function(req, res, next) {
+  req.body.articleId = req.params.id;
+  commentsModel.create(req.body, (err,article) => {
+    if(err) next(err);
+    articleModel.findByIdAndUpdate(req.params.id,{"$push": {"comments":article._id}}, (err,article) => {
+      res.redirect('/articles/'+req.params.id);
+    })
   })
 });
 
